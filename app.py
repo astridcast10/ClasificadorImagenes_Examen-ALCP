@@ -1,7 +1,7 @@
 """
 App - Clasificador de Imágenes con CNN (CIFAR-10)
 Examen - Computación en la Nube | UTH
-Autor: Astrid 
+Autor: Astrid  
 """
 
 import streamlit as st
@@ -20,6 +20,7 @@ CLASES = ['avión', 'auto', 'pájaro', 'gato', 'ciervo',
 
 NOMBRE_AUTOR = "Astrid"  
 
+UMBRAL_CONFIANZA = 0.50 
 
 @st.cache_resource
 def cargar_modelo():
@@ -54,6 +55,15 @@ st.markdown(
     """
 )
 
+with st.expander("📋 Ver las 10 clases que el modelo reconoce"):
+    columnas = st.columns(5)
+    for i, nombre_clase in enumerate(CLASES):
+        columnas[i % 5].markdown(f"- {nombre_clase.capitalize()}")
+    st.caption(
+        "⚠️ El modelo SOLO reconoce estas 10 categorías. Cualquier otra imagen "
+        "(personas, objetos, paisajes, etc.) va a forzarse dentro de una de ellas."
+    )
+
 modelo = cargar_modelo()
 
 tab_subir, tab_camara = st.tabs(["📁 Subir imagen", "📷 Tomar foto"])
@@ -81,9 +91,17 @@ if imagen_entrada is not None:
 
     with col2:
         st.subheader("Resultado")
-        st.metric(label="Predicción", value=clase.capitalize())
-        st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
-        st.progress(min(confianza, 1.0))
+
+        if confianza < UMBRAL_CONFIANZA:
+            st.warning(
+                "⚠️ No se pudo identificar con certeza. Es probable que la imagen "
+                "no corresponda a ninguna de las 10 categorías conocidas por el modelo "
+                f"(mejor coincidencia: **{clase}**, {confianza*100:.1f}% de confianza)."
+            )
+        else:
+            st.metric(label="Predicción", value=clase.capitalize())
+            st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
+            st.progress(min(confianza, 1.0))
 
     with st.expander("Ver todas las probabilidades"):
         for nombre_clase, prob in sorted(
