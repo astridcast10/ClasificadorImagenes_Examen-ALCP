@@ -1,17 +1,8 @@
-"""
-App - Clasificador de Imágenes con CNN (CIFAR-10)
-Examen - Computación en la Nube | UTH
-Autor: Astrid  <-- cambiá esto por tu nombre completo antes de entregar
-"""
-
 import streamlit as st
 import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-# --------------------------------------------------------------------------
-# Configuración general de la página
-# --------------------------------------------------------------------------
 st.set_page_config(
     page_title="Clasificador de Imágenes - CIFAR10",
     page_icon="🔍",
@@ -21,14 +12,11 @@ st.set_page_config(
 CLASES = ['avión', 'auto', 'pájaro', 'gato', 'ciervo',
           'perro', 'rana', 'caballo', 'barco', 'camión']
 
-NOMBRE_AUTOR = "Astrid"  # <-- poné tu nombre completo aquí, aparece en la interfaz
+NOMBRE_AUTOR = "Astrid"
 
-UMBRAL_CONFIANZA = 0.50  # si la predicción principal no llega a este %, se avisa que no es una clase conocida
+UMBRAL_CONFIANZA = 0.75
 
 
-# --------------------------------------------------------------------------
-# Cargar el modelo (se cachea para no recargarlo en cada interacción)
-# --------------------------------------------------------------------------
 @st.cache_resource
 def cargar_modelo():
     modelo = tf.keras.models.load_model("modelo_clasificador.h5")
@@ -36,7 +24,6 @@ def cargar_modelo():
 
 
 def predecir(imagen: Image.Image, modelo):
-    """Recibe una imagen PIL, la prepara y devuelve (clase, confianza, todas las probabilidades)."""
     img = imagen.convert("RGB").resize((32, 32))
     arreglo = np.array(img).astype("float32") / 255.0
     arreglo = np.expand_dims(arreglo, axis=0)
@@ -48,9 +35,6 @@ def predecir(imagen: Image.Image, modelo):
     return CLASES[indice_clase], confianza, predicciones
 
 
-# --------------------------------------------------------------------------
-# Interfaz
-# --------------------------------------------------------------------------
 st.title("🔍 Clasificador de Imágenes con IA")
 st.caption(f"Proyecto de Computación en la Nube — hecho por **{NOMBRE_AUTOR}**")
 
