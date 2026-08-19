@@ -53,14 +53,29 @@ st.markdown(
     """
 )
 
-with st.expander("📋 Ver las 10 clases que el modelo reconoce"):
-    columnas = st.columns(5)
-    for i, nombre_clase in enumerate(CLASES):
-        columnas[i % 5].markdown(f"- {nombre_clase.capitalize()}")
-    st.caption(
-        "⚠️ El modelo SOLO reconoce estas 10 categorías. Cualquier otra imagen "
-        "(personas, objetos, paisajes, etc.) va a forzarse dentro de una de ellas."
-    )
+st.markdown(
+    """
+    <div style="background-color:#EAF2FF; border:1px solid #B6D4FE; border-radius:10px; padding:18px 20px; margin-bottom:20px;">
+        <h4 style="margin-top:0; color:#0B3D91;">📋 Categorías que el modelo reconoce</h4>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin:12px 0;">
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Avión</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Auto</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Pájaro</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Gato</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Ciervo</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Perro</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Rana</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Caballo</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Barco</span>
+            <span style="background:#0B3D91; color:white; padding:6px 14px; border-radius:20px; font-size:14px;">Camión</span>
+        </div>
+        <p style="margin-bottom:0; color:#8A6D00; background:#FFF3CD; border-left:4px solid #FFC107; padding:10px 14px; border-radius:6px; font-size:14px;">
+            ⚠️ El modelo <b>SOLO</b> reconoce estas 10 categorías. Cualquier otra imagen (personas, objetos, paisajes, etc.) va a forzarse dentro de una de ellas.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 modelo = cargar_modelo()
 
