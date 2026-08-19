@@ -1,7 +1,7 @@
 """
 App - Clasificador de Imágenes con CNN (CIFAR-10)
 Examen - Computación en la Nube | UTH
-Autor: Astrid  
+Autor: Astrid  <-- cambiá esto por tu nombre completo antes de entregar
 """
 
 import streamlit as st
@@ -9,6 +9,9 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
+# --------------------------------------------------------------------------
+# Configuración general de la página
+# --------------------------------------------------------------------------
 st.set_page_config(
     page_title="Clasificador de Imágenes - CIFAR10",
     page_icon="🔍",
@@ -18,10 +21,14 @@ st.set_page_config(
 CLASES = ['avión', 'auto', 'pájaro', 'gato', 'ciervo',
           'perro', 'rana', 'caballo', 'barco', 'camión']
 
-NOMBRE_AUTOR = "Astrid"  
+NOMBRE_AUTOR = "Astrid"  # <-- poné tu nombre completo aquí, aparece en la interfaz
 
-UMBRAL_CONFIANZA = 0.50 
+UMBRAL_CONFIANZA = 0.50  # si la predicción principal no llega a este %, se avisa que no es una clase conocida
 
+
+# --------------------------------------------------------------------------
+# Cargar el modelo (se cachea para no recargarlo en cada interacción)
+# --------------------------------------------------------------------------
 @st.cache_resource
 def cargar_modelo():
     modelo = tf.keras.models.load_model("modelo_clasificador.h5")
@@ -91,17 +98,27 @@ if imagen_entrada is not None:
 
     with col2:
         st.subheader("Resultado")
-
-        if confianza < UMBRAL_CONFIANZA:
-            st.warning(
-                "⚠️ No se pudo identificar con certeza. Es probable que la imagen "
-                "no corresponda a ninguna de las 10 categorías conocidas por el modelo "
-                f"(mejor coincidencia: **{clase}**, {confianza*100:.1f}% de confianza)."
-            )
-        else:
+        if confianza >= UMBRAL_CONFIANZA:
             st.metric(label="Predicción", value=clase.capitalize())
             st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
             st.progress(min(confianza, 1.0))
+        else:
+            st.metric(label="Mejor coincidencia", value=clase.capitalize())
+            st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
+
+    if confianza < UMBRAL_CONFIANZA:
+        st.markdown("---")
+        st.error(
+            f"""
+### 🚫 Clase no reconocida
+
+La confianza del modelo ({confianza*100:.1f}%) está por debajo del umbral mínimo ({UMBRAL_CONFIANZA*100:.0f}%).
+
+**Esto significa que la imagen probablemente NO corresponde a ninguna de las 10 categorías** que el modelo aprendió a reconocer (avión, auto, pájaro, gato, ciervo, perro, rana, caballo, barco, camión).
+
+En vez de forzar una respuesta poco confiable, la app te avisa para que no la tomes como válida.
+            """
+        )
 
     with st.expander("Ver todas las probabilidades"):
         for nombre_clase, prob in sorted(
