@@ -84,11 +84,11 @@ if imagen_entrada is not None:
         st.subheader("Resultado")
         if confianza >= UMBRAL_CONFIANZA:
             st.metric(label="Predicción", value=clase.capitalize())
-            st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
+            st.metric(label="Confianza", value=f"{confianza:.2f}")
             st.progress(min(confianza, 1.0))
         else:
             st.metric(label="Mejor coincidencia", value=clase.capitalize())
-            st.metric(label="Confianza", value=f"{confianza*100:.1f}%")
+            st.metric(label="Confianza", value=f"{confianza:.2f}")
 
     if confianza < UMBRAL_CONFIANZA:
         st.markdown("---")
@@ -96,7 +96,7 @@ if imagen_entrada is not None:
             f"""
 ### 🚫 Clase no reconocida
 
-La confianza del modelo ({confianza*100:.1f}%) está por debajo del umbral mínimo ({UMBRAL_CONFIANZA*100:.0f}%).
+La confianza del modelo ({confianza:.2f}) está por debajo del umbral mínimo ({UMBRAL_CONFIANZA:.2f}).
 
 **Esto significa que la imagen probablemente NO corresponde a ninguna de las 10 categorías** que el modelo aprendió a reconocer (avión, auto, pájaro, gato, ciervo, perro, rana, caballo, barco, camión).
 
@@ -108,7 +108,7 @@ En vez de forzar una respuesta poco confiable, la app te avisa para que no la to
         for nombre_clase, prob in sorted(
             zip(CLASES, todas_probs), key=lambda x: x[1], reverse=True
         ):
-            st.write(f"{nombre_clase.capitalize()}: {prob*100:.2f}%")
+            st.write(f"{nombre_clase.capitalize()}: {prob:.2f}")
 else:
     st.info("Subí una imagen o tomá una foto para empezar.")
 
