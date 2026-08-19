@@ -12,7 +12,7 @@ st.set_page_config(
 CLASES = ['avión', 'auto', 'pájaro', 'gato', 'ciervo',
           'perro', 'rana', 'caballo', 'barco', 'camión']
 
-NOMBRE_AUTOR = "Astrid"
+NOMBRE_AUTOR = "Astrid Lizbeth Castellanos Pineda"
 
 UMBRAL_CONFIANZA = 0.75
 
