@@ -1,7 +1,7 @@
 """
 App - Clasificador de Imágenes con CNN (CIFAR-10)
 Examen - Computación en la Nube | UTH
-Autor: Astrid  <-- cambiá esto por tu nombre completo antes de entregar
+Autor: Astrid 
 """
 
 import streamlit as st
@@ -9,9 +9,6 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-# --------------------------------------------------------------------------
-# Configuración general de la página
-# --------------------------------------------------------------------------
 st.set_page_config(
     page_title="Clasificador de Imágenes - CIFAR10",
     page_icon="🔍",
@@ -21,12 +18,9 @@ st.set_page_config(
 CLASES = ['avión', 'auto', 'pájaro', 'gato', 'ciervo',
           'perro', 'rana', 'caballo', 'barco', 'camión']
 
-NOMBRE_AUTOR = "Astrid"  # <-- poné tu nombre completo aquí, aparece en la interfaz
+NOMBRE_AUTOR = "Astrid"  
 
 
-# --------------------------------------------------------------------------
-# Cargar el modelo (se cachea para no recargarlo en cada interacción)
-# --------------------------------------------------------------------------
 @st.cache_resource
 def cargar_modelo():
     modelo = tf.keras.models.load_model("modelo_clasificador.h5")
