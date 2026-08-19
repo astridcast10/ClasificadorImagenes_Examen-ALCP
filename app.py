@@ -24,7 +24,14 @@ def cargar_modelo():
 
 
 def predecir(imagen: Image.Image, modelo):
-    img = imagen.convert("RGB").resize((32, 32))
+    if imagen.mode in ("RGBA", "LA", "P"):
+        imagen = imagen.convert("RGBA")
+        fondo = Image.new("RGB", imagen.size, (255, 255, 255))
+        fondo.paste(imagen, mask=imagen.split()[-1])
+        img = fondo.resize((32, 32))
+    else:
+        img = imagen.convert("RGB").resize((32, 32))
+
     arreglo = np.array(img).astype("float32") / 255.0
     arreglo = np.expand_dims(arreglo, axis=0)
 
